@@ -12,7 +12,8 @@ return {
         Fun = {
             '8ball',
             'coinflip',
-            'roll'
+            'roll',
+            'choose'
         },
         General = {
             'ping',

@@ -1,17 +1,9 @@
 local discordia = require('discordia')
 discordia.extensions()
 
-local timer = require('timer')
-
 local client = discordia.Client()
 
 local config = require('Structures.config')
-
-client:on('ready', function()
-	print(string.format("%s ready.", client.user.username))
-    client:setStatus(config.status.status)
-    client:setGame({name=config.status.name,type=config.status.type})
-end)
 
 local commandList = {}
 local commandFolder = './Commands/'
@@ -24,15 +16,12 @@ for n,category in pairs(config.enableCommands) do
             alias = command.alias,
             category = n,
             description = command.description,
-            ownerOnly = command.ownerOnly or false,
+            botPermission = command.permission, -- Planned to add.
+            ownerOnly = command.ownerOnly,
             run = command.execute,
         });
-        print(string.format(#commandList.." Command \"%s\" Enabled.", command.name))
+        client:info(string.format("%s Command \"%s\" Enabled.", #commandList, command.name))
     end
-end
-
-function errorHandler(err)
-    print("Error occured: "..err)
 end
 
 function execute(msg)
@@ -50,20 +39,27 @@ function execute(msg)
     end
         
     if (commandObject) then
+        --if (commandObject.botPermission) then
+            -- do thing..
+        --end
         if (commandObject.ownerOnly) and msg.author.id ~= config.ownerId then
             return
         end
-        local pass, err = pcall(function()
+        local _, err = pcall(function()
             commandObject.run(args, msg, client, {
                 commands = commandList,
                 prefix = config.prefix
             });
         end)
-        if err then
-            errorHandler(err)
-        end
+        if err then client:error("Error occured: "..err) end
 	end
 end
+
+client:on('ready', function()
+    client:info(string.format("%s Deployed", client.user.username))
+    client:setStatus(config.status.status)
+    client:setGame({name=config.status.name,type=config.status.type})
+end)
 
 client:on('messageCreate', function(msg)
 	if (not string.startswith(msg.content, config.prefix)) then
@@ -79,9 +75,7 @@ client:on('messageCreate', function(msg)
 		return
     end
     local pass, err = pcall(execute, msg)
-    if not pass then
-        print(err); msg.channel:send('Error occured with the command.')
-    end
+    if not pass then msg.channel:send('Error occured with the command.') end
 end)
 
 client:run('Bot '..config.token)
