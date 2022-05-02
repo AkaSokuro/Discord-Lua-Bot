@@ -2,8 +2,11 @@ return {
 	name = 'test',
 	alias = 't', 
 	description = 'Test',
+	userPermission = {
+		"banMembers"
+	},
 	botPermission = {
-		"sendMessages"
+		
 	},
 	ownerOnly = true,
 

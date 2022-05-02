@@ -2,6 +2,9 @@ return {
 	name = 'choose',
 	alias = 'pick', 
 	description = 'Let the bot pick a choice for you.',
+    botPermission = {
+		
+	},
 
     execute = function(args, msg)
 

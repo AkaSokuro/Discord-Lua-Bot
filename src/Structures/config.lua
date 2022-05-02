@@ -2,7 +2,7 @@ return {
     ownerId = "736602521887571968",
 
     prefix = "m>",
-    status = {
+    presence = {
         status = "idle",
         name = "Lua bot?",
         type = 2
@@ -18,6 +18,9 @@ return {
         General = {
             'ping',
             'test'
+        },
+        Settings = {
+            'prefix'
         }
     },
 

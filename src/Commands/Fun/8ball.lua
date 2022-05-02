@@ -2,6 +2,9 @@ return {
 	name = '8ball',
 	alias = '', 
 	description = 'Ask a question and get a reply.',
+    botPermission = {
+		
+	},
 
     execute = function(args, msg)
 

@@ -2,6 +2,9 @@ return {
 	name = 'ping',
 	alias = '', 
 	description = 'Get bot\'s ping.',
+    botPermission = {
+		
+	},
 
     execute = function(_, msg)
 

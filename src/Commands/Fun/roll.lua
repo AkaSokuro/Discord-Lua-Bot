@@ -2,6 +2,9 @@ return {
 	name = 'roll',
 	alias = 'dice', 
 	description = 'Rolls the dice.',
+    botPermission = {
+		
+	},
 
     execute = function(args, msg)
 
