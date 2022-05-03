@@ -15,7 +15,7 @@ return {
 
         local newPrefix = args[1]
         
-        local guildData = client._getData('guildData')
+        local guildData = client._getData('guildData') or  {}
         local newData = {[msg.guild.id] = {prefix = newPrefix}}
 
         local guildTable = {}

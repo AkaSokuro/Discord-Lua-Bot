@@ -19,6 +19,9 @@ return {
             'ping',
             'test'
         },
+        Moderation = {
+            'prune'
+        },
         Settings = {
             'prefix'
         },
