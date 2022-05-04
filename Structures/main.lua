@@ -127,18 +127,16 @@ function execute(botPrefix, msg)
             local ucd = cooldown[table.search(cooldown, cName)]
             if not ucd then
                 table.insert(cooldown, cName)
-                local cdCoroutine = coroutine.wrap(function()
+                coroutine.wrap(function()
                     timer.sleep(commandObject.cooldown*1000)
                     table.remove(cooldown, table.search(cooldown, cName))
-                end)
-                cdCoroutine()
+                end)()
             else
-                local mCoroutine = coroutine.wrap(function()
+                coroutine.wrap(function()
                     local m = msg:reply(string.format("<@%s>, Please wait %ss before using that command again.", msg.author.id, commandObject.cooldown))
                     timer.sleep(3000)
                     if m then local s = assert(m:delete()) end
-                end)
-                mCoroutine()
+                end)()
                 return
             end
         end
