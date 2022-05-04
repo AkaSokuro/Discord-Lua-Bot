@@ -1,5 +1,5 @@
 return {
-    ownerId = "736602521887571968",
+    ownerId = {"736602521887571968"},
 
     prefix = "m>",
     presence = {
