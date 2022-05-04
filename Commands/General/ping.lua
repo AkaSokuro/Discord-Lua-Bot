@@ -2,6 +2,7 @@ return {
 	name = 'ping',
 	alias = '', 
 	description = 'Get bot\'s ping.',
+    cooldown = 5,
     botPermission = {
 		
 	},

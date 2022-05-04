@@ -2,6 +2,7 @@ return {
 	name = 'choose',
 	alias = 'pick', 
 	description = 'Let the bot pick a choice for you.',
+    cooldown = 5,
     botPermission = {
 		
 	},

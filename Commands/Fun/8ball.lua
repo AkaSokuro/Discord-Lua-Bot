@@ -2,6 +2,7 @@ return {
 	name = '8ball',
 	alias = '', 
 	description = 'Ask a question and get a reply.',
+    cooldown = 5,
     botPermission = {
 		
 	},

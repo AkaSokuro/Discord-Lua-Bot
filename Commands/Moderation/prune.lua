@@ -2,6 +2,7 @@ return {
 	name = 'prune',
 	alias = 'purge', 
 	description = 'Prune chats for specify amount.',
+    cooldown = 10,
 	userPermission = {
 		"manageMessages"
 	},
@@ -23,7 +24,12 @@ return {
         local msgcaches = msg.channel:getMessages(amount)
         msg.channel:bulkDelete(msgcaches)
 
-        --local m = msg:reply(string.format("Prune %s messages. :broom:", amount))
+        local mCoroutine = coroutine.wrap(function()
+            local m = msg:reply(string.format("Prune %s messages. :broom:", amount))
+            timer.sleep(3000)
+            if m then local s = assert(m:delete()) end
+        end)
+        mCoroutine()
 
 	end
 }

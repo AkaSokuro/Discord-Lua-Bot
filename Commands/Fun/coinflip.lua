@@ -2,6 +2,7 @@ return {
 	name = 'coinflip',
 	alias = 'flip', 
 	description = 'Flips the coin.',
+	cooldown = 5,
 	botPermission = {
 		
 	},
