@@ -24,12 +24,11 @@ return {
         local msgcaches = msg.channel:getMessages(amount)
         msg.channel:bulkDelete(msgcaches)
 
-        local mCoroutine = coroutine.wrap(function()
+        coroutine.wrap(function()
             local m = msg:reply(string.format("Prune %s messages. :broom:", #msgcaches))
             timer.sleep(3000)
             if m then local s = assert(m:delete()) end
-        end)
-        mCoroutine()
+        end)()
 
 	end
 }
