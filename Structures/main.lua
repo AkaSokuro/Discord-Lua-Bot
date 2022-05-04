@@ -3,12 +3,15 @@ discordia.extensions()
 
 local client = discordia.Client()
 
-_G.require = require
-local dataManager = require("Structures.dataManager")
+local timer = require("timer")
 local coro = require("coro-http")
 
-local timer = require("timer")
+--// Global Variables //
+_G.require = require
 _G.timer = timer
+_G.coro = coro
+
+local dataManager = require("Structures.dataManager")
 
 local config = require('Structures.config')
 
@@ -83,9 +86,12 @@ function execute(botPrefix, msg)
         local botIsAdmin = bot:hasPermission(msg.channel, "administrator")
         local userIsAdmin = user:hasPermission(msg.channel, "administrator")
 
+        -- If bot doesn't has permission to send message.
         if not bot:hasPermission(msg.channel, "sendMessages") then
             return
         end
+
+        -- If user doesn't has the requirement permission.
         if (commandObject.userPermission) and not userIsAdmin then
             for _,p in pairs(commandObject.userPermission) do
                 if not user:hasPermission(msg.channel, p) then
@@ -94,6 +100,8 @@ function execute(botPrefix, msg)
                 end
             end
         end
+
+        -- If bot doesn't has the requirement permission.
         if (commandObject.botPermission) and not botIsAdmin then
             for _,p in pairs(commandObject.botPermission) do
                 if not bot:hasPermission(msg.channel, p) then
@@ -102,6 +110,8 @@ function execute(botPrefix, msg)
                 end
             end
         end
+
+        -- If the command can only be executed by bot's owner.
         if (commandObject.ownerOnly) and msg.author.id ~= config.ownerId then
             return
         end
@@ -109,7 +119,7 @@ function execute(botPrefix, msg)
         local _, err = pcall(function()
             commandObject.run(args, msg, client, {
                 commands = commandList,
-                prefix = config.prefix
+                prefix = botPrefix
             });
         end)
         if err then client:error(err) end
@@ -127,6 +137,7 @@ client:on('messageCreate', function(msg)
     local botPrefix = config.prefix
 
     local guildData = client._getData('guildData')
+    -- If guild use custom prefix.
     for _,v in pairs(guildData) do
         if v[msg.guild.id] then
             botPrefix = v[msg.guild.id].prefix
@@ -145,6 +156,7 @@ client:on('messageCreate', function(msg)
 	if (msg.author.bot) then
 		return
     end
+
     local _, err = pcall(execute, botPrefix, msg)
     if err then 
         msg.channel:send('Error occured with the command.') 
