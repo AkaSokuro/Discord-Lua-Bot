@@ -10,6 +10,7 @@ local coro = require("coro-http")
 _G.require = require
 _G.timer = timer
 _G.coro = coro
+_G.cooldown = cooldown
 
 local dataManager = require("Structures.dataManager")
 
@@ -17,6 +18,8 @@ local config = require('Structures.config')
 
 local commandList = {}
 local commandFolder = './Commands/'
+
+local cooldown = {}
 
 for n,category in pairs(config.enableCommands) do
     for _,cmd in pairs(category) do
@@ -26,6 +29,7 @@ for n,category in pairs(config.enableCommands) do
             alias = command.alias,
             category = n,
             description = command.description,
+            cooldown = command.cooldown,
             userPermission = command.userPermission,
             botPermission = command.botPermission,
             ownerOnly = command.ownerOnly,
@@ -85,6 +89,7 @@ function execute(botPrefix, msg)
 
         local botIsAdmin = bot:hasPermission(msg.channel, "administrator")
         local userIsAdmin = user:hasPermission(msg.channel, "administrator")
+        local userhasCooldown = table.search(cooldown, msg.author.id)
 
         -- If bot doesn't has permission to send message.
         if not bot:hasPermission(msg.channel, "sendMessages") then
@@ -112,8 +117,30 @@ function execute(botPrefix, msg)
         end
 
         -- If the command can only be executed by bot's owner.
-        if (commandObject.ownerOnly) and msg.author.id ~= config.ownerId then
+        if (commandObject.ownerOnly) and not table.search(config.ownerId, msg.author.id) then
             return
+        end
+
+        -- If the command has cooldown then create cooldown for user/cmd.
+        if (commandObject.cooldown) then
+            local cName = string.format("%s&%s",msg.author.id,commandObject.name)
+            local ucd = cooldown[table.search(cooldown, cName)]
+            if not ucd then
+                table.insert(cooldown, cName)
+                local cdCoroutine = coroutine.wrap(function()
+                    timer.sleep(commandObject.cooldown*1000)
+                    table.remove(cooldown, table.search(cooldown, cName))
+                end)
+                cdCoroutine()
+            else
+                local mCoroutine = coroutine.wrap(function()
+                    local m = msg:reply(string.format("<@%s>, Please wait %ss before using that command again.", msg.author.id, commandObject.cooldown))
+                    timer.sleep(3000)
+                    if m then local s = assert(m:delete()) end
+                end)
+                mCoroutine()
+                return
+            end
         end
 
         local _, err = pcall(function()
