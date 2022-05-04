@@ -18,9 +18,7 @@ return {
         if type(amount) ~= "number" then return msg:reply("Amount has to be number!") end
         if amount < 1 then return msg:reply("Amount can't be lower than 1!") end
 
-        amount = amount+1
-
-        if amount > 100 then amount = 100 end -- Prevent ratelimit.
+        amount = math.clamp(amount+1, 1, 100) -- Prevent ratelimit.
 
         local msgcaches = msg.channel:getMessages(amount)
         msg.channel:bulkDelete(msgcaches)
