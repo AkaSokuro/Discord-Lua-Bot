@@ -1,5 +1,5 @@
-# Discord-Lua-Bot
-A Discord bot using Discordia.
+# Discord Lua Bot
+My Discord bot using Discordia.
 
 ## Want to try bot?
 You must have [luvit](https://luvit.io) installed. If you do you have to configure the `config.lua` file.
